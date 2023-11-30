@@ -1,4 +1,5 @@
 import tkinter as tk
+import calculate as calc
 from PIL import Image,ImageTk
 
 
@@ -47,14 +48,12 @@ def Calculation():
     val_5 = float(num_area_5.get())
 
     P2 = val_1
-
     Q2 = val_2
-
     P3 = val_3
-
     Q3 = val_4
-
-    P4 = val=5
+    P4 = val_5
+    
+    calc.node_calc(P2,P3,P4,Q2,Q3)
 
 
 #GUI上にP1を表示
@@ -117,5 +116,9 @@ var=tk.DoubleVar()
     pady=170))
 
 V4=var
+
+
+
+
 
 root.mainloop()
