@@ -1,4 +1,4 @@
-def node_calc(P2,P3,P4,Q2,Q3):
+def node_calc(P2,P3,P4,Q2,Q3,V4):
     import numpy as np
 
     np.set_printoptions(precision=4,floatmode='fixed')  
@@ -31,9 +31,8 @@ def node_calc(P2,P3,P4,Q2,Q3):
 
     theta=np.zeros((4,1))
 
-    V=np.zeros((4,1))
-    V[0][0]=1
-    V[3][0]=1 
+    V=np.array([1,1,1,1])
+    V[3]=V4 #1 
 
     #ノードアドミタンス行列の計算
     cnt=0
@@ -67,7 +66,7 @@ def node_calc(P2,P3,P4,Q2,Q3):
     #print(G)
     #print(B)
 
-    V=np.array([1,1,1,1])
+    #V=np.array([1,1,1,1])
     theta=np.array([0,0,0,0])
     Jacobian=np.zeros((5,5))
     v=np.array([0,1,0,1,0])

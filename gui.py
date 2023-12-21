@@ -4,7 +4,7 @@ import numpy
 from PIL import Image,ImageTk
 
 #初期画面作成
-pic=Image.open('image.jpg')
+pic=Image.open('image2.jpg')
 w=pic.width
 h=pic.height
 
@@ -95,9 +95,9 @@ def Caluclation():
     Q3 = val_4
     P4 = val_5
 
-    P_branch=calc.node_calc(P2,P3,P4,Q2,Q3)
+    P_branch=calc.node_calc(P2,P3,P4,Q2,Q3,V4)
     above=P_branch[0][1] 
-    under=P_branch[2][3] #後で修正
+    under=P_branch[2][3] 
     draw_shape(canvas,above,under,V4)
     
     #実部を潮流電流とした
@@ -123,7 +123,8 @@ var=tk.DoubleVar()
     length=200,
     width=20,
     orient=tk.HORIZONTAL,
-    variable=var
+    variable=var,
+    command=Caluclation
     ).
     grid(
     row=1,
