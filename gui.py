@@ -21,39 +21,7 @@ canvas.create_image(200, 50, image=pic, anchor=tk.NW)
 
 #潮流計算の関数作成
 
-#GUI上にP1を表示
-#P2_label=tk.Label(master=root,text="P2",font=20)
-#P2_label.place(x=10,y=20)
-
-#Q2_label=tk.Label(master=root,text="Q2",font=20)
-#Q2_label.place(x=10,y=50)
-
-#P3_label=tk.Label(master=root,text="P3",font=20)
-#P3_label.place(x=10,y=80)
-
-#Q3_label=tk.Label(master=root,text="Q3",font=20)
-#Q3_label.place(x=10,y=110)
-
-#P4_label=tk.Label(master=root,text="P4",font=20)
-#P4_label.place(x=10,y=140)
-
-#テキストエリア作製
-#num_area_1=tk.Entry(master=root,width=5,font=20)
-#num_area_1.place(x=100,y=20)
-
-#num_area_2=tk.Entry(master=root,width=5,font=20)
-#num_area_2.place(x=100,y=50)
-
-#num_area_3=tk.Entry(master=root,width=5,font=20)
-#num_area_3.place(x=100,y=80)
-
-#num_area_4=tk.Entry(master=root,width=5,font=20)
-#num_area_4.place(x=100,y=110)
-
-#num_area_5=tk.Entry(master=root,width=5,font=20)
-#num_area_5.place(x=100,y=140)
-
-def draw_shape(canvas,above,under,V4):
+def draw_shape(canvas,above,under,V4,V2,V3):
     canvas.delete("arrow","circle","line")
     # 矢印の描画（上）
     if (above <= 0).any():
@@ -82,8 +50,8 @@ def draw_shape(canvas,above,under,V4):
     #canvas.create_text(100,100,text="test")
 
     #電圧の表示
-    canvas.create_line(900,100,900 +100,100,width=20,fill="#33ccff",tag="line")
-    canvas.create_line(900,350,900 +100,350,width=20,fill="#33ccff",tag="line")
+    canvas.create_line(900,100,900+V2*40,100,width=20,fill="#33ccff",tag="line")
+    canvas.create_line(900,350,900+V3*40,350,width=20,fill="#33ccff",tag="line")
     #+100にV2*1000 V3*1000を代入
 
 def Caluclation():
@@ -100,17 +68,21 @@ def Caluclation():
     Q3 = scale_5.get()
     P4 = scale_6.get()
     
-    P_branch=calc.node_calc(P2,P3,P4,Q2,Q3,V4)
+    ans=calc.node_calc(P2,P3,P4,Q2,Q3,V4)
+    P_branch=ans[0]
     above=P_branch[0][1] 
-    under=P_branch[2][3] 
-    draw_shape(canvas,above,under,V4)
+    under=P_branch[2][3]
+    V=ans[1] 
+    V2=V[1]
+    V3=V[2]
+    draw_shape(canvas,above,under,V4,V2,V3)
     
     #実部を潮流電流とした
     
 
 #ボタン作成
-enter_btn=tk.Button(master=root,text="入力",command=Caluclation)
-enter_btn.place(x=500,y=300)
+enter_btn=tk.Button(master=root,text="入力",command=Caluclation) 
+enter_btn.place(x=260,y=600)
 
 
 #スライド作成
@@ -121,7 +93,6 @@ var_3=tk.DoubleVar()
 var_4=tk.DoubleVar()
 var_5=tk.DoubleVar()
 var_6=tk.DoubleVar()
-
 
 
 scale_1=tk.Scale(
@@ -207,7 +178,6 @@ scale_5=tk.Scale(
     width=20,
     orient=tk.HORIZONTAL,
     variable=var_5,
-    
     )
 scale_5.pack(padx=10,pady=10)
 scale_5.set(-0.3)
@@ -224,24 +194,17 @@ scale_6=tk.Scale(
     length=200,
     width=20,
     orient=tk.HORIZONTAL,
-    variable=var_6,
-    
+    variable=var_6,   
     )
 scale_6.pack(padx=10,pady=10)
 scale_6.set(0.6)
 
-    #grid(
-    #row=1,
-    #column=3,
-    #padx=10,
-    #pady=170))
 scale_1.place(x=20,y=50)
 scale_2.place(x=20,y=150)
 scale_3.place(x=20,y=250)
 scale_4.place(x=20,y=350)
 scale_5.place(x=20,y=450)
 scale_6.place(x=20,y=550)
-
 
 t1=240.0
 t2=100.0

@@ -210,4 +210,4 @@ def node_calc(P2,P3,P4,Q2,Q3,V4):
     P_branch=np.real(Power)
     Q_branch=np.imag(Power)
     
-    return P_branch
+    return P_branch,V
