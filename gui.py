@@ -1,7 +1,9 @@
+
 import tkinter as tk
 import calculate as calc
-import numpy
 from PIL import Image,ImageTk
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 #初期画面作成
 pic=Image.open('image2.jpg')
@@ -14,54 +16,56 @@ root.title("潮流計算")
 
 pic=pic.resize((int(w * (1080/w)), int(h * (1080/w))))
 pic = ImageTk.PhotoImage(pic)
-
 canvas=tk.Canvas(bg="gray", width=1920, height=1080)
 canvas.place(x=0, y=0)
 canvas.create_image(200, 50, image=pic, anchor=tk.NW)
 
+#電圧グラフの作成
+fig_bar = Figure(figsize=(5, 4), dpi=50)
+ax_bar = fig_bar.add_subplot(111)
+bar_values = [0, 0, 0, 0]
+bar_labels = ['V1', 'V2', 'V3', 'V4']
+bars = ax_bar.bar(bar_labels, bar_values, color=['blue', 'green', 'orange', 'red'])
+
+def update_bar_graph(V1, V2, V3, V4):
+    bar_values = [V1, V2, V3, V4]
+    for bar, value in zip(bars, bar_values):
+        bar.set_height(value)
+    canvas_bar.draw()
+
 #潮流計算の関数作成
 
-def draw_shape(canvas,above,under,V4,V2,V3):
-    canvas.delete("arrow","circle","line")
+def draw_shape(canvas,above,under,V4,V2,V3,P4):
+    canvas.delete("arrow","circle","line","str")
+    update_bar_graph(1,V2, V3, V4)
     # 矢印の描画（上）
     if (above <= 0).any():
         canvas.create_line(600, 80, 650, 80, width=above*(-33), fill="#edb918", arrow="first", arrowshape=(above*(-20),above*(-25),above*(-10)),tag="arrow")
+        canvas.create_text(625,90,text=str(above)+"pu",tag="str")
         #数値は全て変数にする(始点x,始点ｙ,終点x,終点y,太さ)
     else:
         canvas.create_line(600, 80, 650, 80, width=above*33, fill="#edb918", arrow="last", arrowshape=(above*20,above*25,above*10),tag="arrow")
-
+        canvas.create_text(625,90,text=str(above)+"pu",tag="str")
     # 矢印の描画（下）
     if under <= 0:
         canvas.create_line(600, 500, 650, 500, width=under*(-33), fill="#edb918", arrow="first", arrowshape=(under*(-20),under*(-25),under*(-10)),tag="arrow")
+        canvas.create_text(625,510,text=str(under)+"pu",tag="str")
         #数値は全て変数にする
     else:
         canvas.create_line(600, 500, 650, 500, width=under*33, fill="#edb918", arrow="last", arrowshape=(under*20,under*25,under*10),tag="arrow")
-
+        canvas.create_text(625,510,text=str(under)+"pu",tag="str")
+        
     #円の表示
     t1=240.0
     t2=400.0
-
-    x0=t1-10*V4
-    y0=t2-10*V4
-    x1=t1+10*V4+100
-    y1=t2+10*V4+100
-
+    x0=t1-10*P4
+    y0=t2-10*P4
+    x1=t1+10*P4+100
+    y1=t2+10*P4+100
     canvas.create_oval(x0,y0,x1,y1,fill="red",tag="circle")
-    #canvas.create_text(100,100,text="test")
-
-    #電圧の表示
-    canvas.create_line(900,100,900+V2*40,100,width=20,fill="#33ccff",tag="line")
-    canvas.create_line(900,350,900+V3*40,350,width=20,fill="#33ccff",tag="line")
-    #+100にV2*1000 V3*1000を代入
 
 def Caluclation():
-   # val_1 = float(num_area_1.get())
-   # val_2 = float(num_area_2.get())
-    #val_3 = float(num_area_3.get())
-    #val_4 = float(num_area_4.get())
-    #val_5 = float(num_area_5.get())
     V4=scale_1.get()
-    
     P2 = scale_2.get()
     Q2 = scale_3.get()
     P3 = scale_4.get()
@@ -75,11 +79,10 @@ def Caluclation():
     V=ans[1] 
     V2=V[1]
     V3=V[2]
-    draw_shape(canvas,above,under,V4,V2,V3)
+    draw_shape(canvas,above,under,V4,V2,V3,P4)
     
     #実部を潮流電流とした
     
-
 #ボタン作成
 enter_btn=tk.Button(master=root,text="入力",command=Caluclation) 
 enter_btn.place(x=260,y=600)
@@ -208,12 +211,18 @@ scale_6.place(x=20,y=550)
 
 t1=240.0
 t2=100.0
-
 x0=t1-10
 y0=t2-10
 x1=t1+110
 y1=t2+110
 
 canvas.create_oval(x0,y0,x1,y1,fill="red")
+
+canvas_bar = FigureCanvasTkAgg(fig_bar, master=root)
+canvas_bar_widget = canvas_bar.get_tk_widget()
+canvas_bar_widget.place(x=990, y=200)
+ax_bar.set_yticks([-9,-6,-3,0,3,6,9])
+ax_bar.set_yticklabels(['-9','-6','-3','0','3','6','9'])
+update_bar_graph(0, 0, 0, 0)  
 
 root.mainloop()
