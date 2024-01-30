@@ -1,10 +1,9 @@
+
 import tkinter as tk
 import calculate as calc
-import numpy
 from PIL import Image,ImageTk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
 
 #初期画面作成
 pic=Image.open('image2.jpg')
@@ -15,11 +14,8 @@ root=tk.Tk()
 root.geometry("1920x1080")
 root.title("潮流計算")
 
-#matplotで図の作成
-
 pic=pic.resize((int(w * (1080/w)), int(h * (1080/w))))
 pic = ImageTk.PhotoImage(pic)
-
 canvas=tk.Canvas(bg="gray", width=1920, height=1080)
 canvas.place(x=0, y=0)
 canvas.create_image(200, 50, image=pic, anchor=tk.NW)
@@ -27,8 +23,6 @@ canvas.create_image(200, 50, image=pic, anchor=tk.NW)
 #電圧グラフの作成
 fig_bar = Figure(figsize=(5, 4), dpi=50)
 ax_bar = fig_bar.add_subplot(111)
-
-
 bar_values = [0, 0, 0, 0]
 bar_labels = ['V1', 'V2', 'V3', 'V4']
 bars = ax_bar.bar(bar_labels, bar_values, color=['blue', 'green', 'orange', 'red'])
@@ -68,7 +62,6 @@ def draw_shape(canvas,above,under,V4,V2,V3,P4):
     y0=t2-10*P4
     x1=t1+10*P4+100
     y1=t2+10*P4+100
-
     canvas.create_oval(x0,y0,x1,y1,fill="red",tag="circle")
 
 def Caluclation():
@@ -218,7 +211,6 @@ scale_6.place(x=20,y=550)
 
 t1=240.0
 t2=100.0
-
 x0=t1-10
 y0=t2-10
 x1=t1+110
